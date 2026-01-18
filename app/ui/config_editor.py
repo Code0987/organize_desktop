@@ -337,6 +337,22 @@ class ConfigEditor(QWidget):
         self.editor.highlighter._setup_rules()
         self.editor.highlighter.rehighlight()
         
+        # Update line number area
+        self.editor.line_number_area.update()
+        
+        # Find and update status bar
+        for child in self.children():
+            if isinstance(child, QFrame):
+                child.setStyleSheet(f"""
+                    QFrame {{
+                        background-color: {style_manager.colors["surface"]};
+                        border-top: 1px solid {style_manager.colors["border"]};
+                    }}
+                """)
+        
+        # Update cursor label
+        self.cursor_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']};")
+        
         # Update validation labels
         self._validate()
     

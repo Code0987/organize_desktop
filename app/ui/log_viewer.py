@@ -169,6 +169,16 @@ class LogViewer(QWidget):
         """Refresh styles after theme change."""
         self.style_manager = style_manager
         
+        # Update all frames (header and status bar)
+        for child in self.children():
+            if isinstance(child, QFrame):
+                child.setStyleSheet(f"""
+                    QFrame {{
+                        background-color: {style_manager.colors["surface"]};
+                        border-bottom: 1px solid {style_manager.colors["border"]};
+                    }}
+                """)
+        
         # Update log text area
         self.log_text.setStyleSheet(f"""
             QTextEdit {{
@@ -179,9 +189,12 @@ class LogViewer(QWidget):
             }}
         """)
         
-        # Update status labels
+        # Update labels
         self.count_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; font-size: 11px;")
         self.stats_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; font-size: 11px;")
+        
+        # Re-render the log with new colors
+        self._refresh_display()
     
     def add_entry(self, entry: LogEntry) -> None:
         """

@@ -308,10 +308,11 @@ class MainWindow(QMainWindow):
     
     def _create_central_widget(self) -> None:
         """Create the central widget with splitters."""
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.central_widget = QWidget()
+        self.central_widget.setStyleSheet(f"background-color: {self.style_manager.colors['background']};")
+        self.setCentralWidget(self.central_widget)
         
-        main_layout = QHBoxLayout(central_widget)
+        main_layout = QHBoxLayout(self.central_widget)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
         
@@ -329,6 +330,7 @@ class MainWindow(QMainWindow):
         
         # Editor area (tabs for visual and YAML editor)
         self.editor_stack = QStackedWidget()
+        self.editor_stack.setStyleSheet(f"background-color: {self.style_manager.colors['background']};")
         
         # Rule editor (visual)
         self.rule_editor = RuleEditor(self.style_manager)
@@ -414,14 +416,20 @@ class MainWindow(QMainWindow):
     
     def _create_editor_container(self) -> QWidget:
         """Create the editor container with view toggle."""
-        container = QWidget()
-        layout = QVBoxLayout(container)
+        self.editor_container = QWidget()
+        layout = QVBoxLayout(self.editor_container)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
         # Tab bar
-        tab_bar = QFrame()
-        tab_layout = QHBoxLayout(tab_bar)
+        self.tab_bar = QFrame()
+        self.tab_bar.setStyleSheet(f"""
+            QFrame {{
+                background-color: {self.style_manager.colors["surface"]};
+                border-bottom: 1px solid {self.style_manager.colors["border"]};
+            }}
+        """)
+        tab_layout = QHBoxLayout(self.tab_bar)
         tab_layout.setContentsMargins(12, 8, 12, 8)
         tab_layout.setSpacing(8)
         
@@ -441,14 +449,15 @@ class MainWindow(QMainWindow):
         # Config name label
         self.config_label = QLabel("Untitled")
         self.config_label.setProperty("subheading", True)
+        self.config_label.setStyleSheet(f"color: {self.style_manager.colors['text_secondary']};")
         tab_layout.addWidget(self.config_label)
         
-        layout.addWidget(tab_bar)
+        layout.addWidget(self.tab_bar)
         
         # Editor stack
         layout.addWidget(self.editor_stack)
         
-        return container
+        return self.editor_container
     
     def _create_status_bar(self) -> None:
         """Create the status bar."""
@@ -883,6 +892,8 @@ class MainWindow(QMainWindow):
     
     def _refresh_child_styles(self) -> None:
         """Refresh styles on all child widgets after theme change."""
+        colors = self.style_manager.colors
+        
         # Refresh rule editor
         if hasattr(self, 'rule_editor'):
             self.rule_editor.refresh_style(self.style_manager)
@@ -899,8 +910,83 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'sidebar'):
             self.sidebar.setStyleSheet(f"""
                 QFrame {{
-                    background-color: {self.style_manager.colors["surface"]};
-                    border-right: 1px solid {self.style_manager.colors["border"]};
+                    background-color: {colors["surface"]};
+                    border-right: 1px solid {colors["border"]};
+                }}
+            """)
+        
+        # Refresh config list
+        if hasattr(self, 'config_list'):
+            self.config_list.setStyleSheet(f"""
+                QListWidget {{
+                    background-color: {colors["surface"]};
+                    border: none;
+                }}
+                QListWidget::item {{
+                    padding: 8px;
+                }}
+                QListWidget::item:selected {{
+                    background-color: {colors["selected"]};
+                }}
+                QListWidget::item:hover:!selected {{
+                    background-color: {colors["hover"]};
+                }}
+            """)
+        
+        # Refresh tab bar
+        if hasattr(self, 'tab_bar'):
+            self.tab_bar.setStyleSheet(f"""
+                QFrame {{
+                    background-color: {colors["surface"]};
+                    border-bottom: 1px solid {colors["border"]};
+                }}
+            """)
+        
+        # Refresh tab buttons
+        if hasattr(self, 'visual_tab'):
+            btn_style = f"""
+                QPushButton {{
+                    background-color: {colors["surface_variant"]};
+                    color: {colors["text"]};
+                    border: 1px solid {colors["border"]};
+                    border-radius: 6px;
+                    padding: 8px 16px;
+                }}
+                QPushButton:checked {{
+                    background-color: {colors["primary"]};
+                    color: {colors["background"]};
+                    border: none;
+                }}
+                QPushButton:hover:!checked {{
+                    background-color: {colors["hover"]};
+                }}
+            """
+            self.visual_tab.setStyleSheet(btn_style)
+            self.yaml_tab.setStyleSheet(btn_style)
+        
+        # Refresh config label
+        if hasattr(self, 'config_label'):
+            self.config_label.setStyleSheet(f"color: {colors['text_secondary']};")
+        
+        # Refresh central widget and editor stack
+        if hasattr(self, 'central_widget'):
+            self.central_widget.setStyleSheet(f"background-color: {colors['background']};")
+        if hasattr(self, 'editor_stack'):
+            self.editor_stack.setStyleSheet(f"background-color: {colors['background']};")
+        if hasattr(self, 'editor_container'):
+            self.editor_container.setStyleSheet(f"background-color: {colors['background']};")
+        
+        # Refresh splitters
+        if hasattr(self, 'main_splitter'):
+            self.main_splitter.setStyleSheet(f"""
+                QSplitter::handle {{
+                    background-color: {colors["border"]};
+                }}
+            """)
+        if hasattr(self, 'right_splitter'):
+            self.right_splitter.setStyleSheet(f"""
+                QSplitter::handle {{
+                    background-color: {colors["border"]};
                 }}
             """)
     

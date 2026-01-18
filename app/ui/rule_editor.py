@@ -535,19 +535,26 @@ class RuleEditor(QWidget):
         layout.setSpacing(0)
         
         # Scroll area for rule cards
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll.setStyleSheet(f"""
+            QScrollArea {{
+                background-color: {self.style_manager.colors["background"]};
+                border: none;
+            }}
+        """)
         
         # Container for rule cards
         self.container = QWidget()
+        self.container.setStyleSheet(f"background-color: {self.style_manager.colors['background']};")
         self.cards_layout = QVBoxLayout(self.container)
         self.cards_layout.setContentsMargins(16, 16, 16, 16)
         self.cards_layout.setSpacing(12)
         self.cards_layout.addStretch()
         
-        scroll.setWidget(self.container)
-        layout.addWidget(scroll)
+        self.scroll.setWidget(self.container)
+        layout.addWidget(self.scroll)
         
         # Empty state
         self.empty_label = QLabel("No rules defined.\nClick 'Add Rule' to create your first rule.")
@@ -610,7 +617,17 @@ class RuleEditor(QWidget):
         """Refresh styles after theme change."""
         self.style_manager = style_manager
         self.empty_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; padding: 40px;")
-        # Refresh all cards
+        
+        # Update scroll area and container backgrounds
+        self.scroll.setStyleSheet(f"""
+            QScrollArea {{
+                background-color: {style_manager.colors["background"]};
+                border: none;
+            }}
+        """)
+        self.container.setStyleSheet(f"background-color: {style_manager.colors['background']};")
+        
+        # Refresh all cards (they will be recreated with new style_manager)
         self._refresh_cards()
     
     def _on_edit_rule(self, index: int) -> None:
