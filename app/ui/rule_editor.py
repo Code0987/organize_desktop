@@ -581,17 +581,16 @@ class RuleEditor(QWidget):
     
     def _refresh_cards(self) -> None:
         """Refresh the rule cards display."""
-        # Clear existing cards
-        while self.cards_layout.count() > 1:  # Keep the stretch
+        # Clear existing cards (but not the empty label or stretch)
+        while self.cards_layout.count() > 0:
             item = self.cards_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            widget = item.widget()
+            if widget and widget != self.empty_label:
+                widget.deleteLater()
         
-        # Show/hide empty state
+        # Re-add the empty label
+        self.cards_layout.addWidget(self.empty_label)
         self.empty_label.setVisible(len(self.rules) == 0)
-        
-        if not self.empty_label.parent():
-            self.cards_layout.insertWidget(0, self.empty_label)
         
         # Add rule cards
         for i, rule in enumerate(self.rules):
@@ -603,6 +602,9 @@ class RuleEditor(QWidget):
             card.move_down_requested.connect(self._on_move_down)
             card.toggle_enabled.connect(self._on_toggle_enabled)
             self.cards_layout.insertWidget(i, card)
+        
+        # Add stretch at the end
+        self.cards_layout.addStretch()
     
     def _on_edit_rule(self, index: int) -> None:
         """Handle rule edit request."""
