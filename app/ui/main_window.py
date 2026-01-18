@@ -59,6 +59,11 @@ class MainWindow(QMainWindow):
     execution_started = pyqtSignal()
     execution_finished = pyqtSignal()
     
+    # Thread-safe signals for rule engine callbacks
+    _log_entry_signal = pyqtSignal(object)  # LogEntry
+    _status_change_signal = pyqtSignal(object)  # ExecutionStatus
+    _execution_complete_signal = pyqtSignal(object)  # ExecutionResult
+    
     def __init__(self):
         """Initialize the main window."""
         super().__init__()
@@ -482,11 +487,16 @@ class MainWindow(QMainWindow):
     
     def _setup_signals(self) -> None:
         """Set up signal connections."""
-        # Rule engine callbacks
+        # Connect thread-safe signals to handlers
+        self._log_entry_signal.connect(self._on_log_entry)
+        self._status_change_signal.connect(self._on_execution_status_change)
+        self._execution_complete_signal.connect(self._on_execution_complete)
+        
+        # Rule engine callbacks - emit signals instead of direct calls
         self.rule_engine.set_callbacks(
-            on_status_change=self._on_execution_status_change,
-            on_log=self._on_log_entry,
-            on_complete=self._on_execution_complete,
+            on_status_change=lambda status: self._status_change_signal.emit(status),
+            on_log=lambda entry: self._log_entry_signal.emit(entry),
+            on_complete=lambda result: self._execution_complete_signal.emit(result),
         )
         
         # File watcher callback

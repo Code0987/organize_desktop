@@ -9,11 +9,6 @@ import sys
 import os
 from pathlib import Path
 
-# Add the app directory to the path for imports
-APP_DIR = Path(__file__).parent
-if str(APP_DIR.parent) not in sys.path:
-    sys.path.insert(0, str(APP_DIR.parent))
-
 
 def setup_environment():
     """Set up environment for the application."""
@@ -27,6 +22,12 @@ def setup_environment():
 def main():
     """Main entry point for the application."""
     setup_environment()
+    
+    # Add parent directory to path if needed (for direct script execution)
+    app_dir = Path(__file__).parent
+    parent_dir = str(app_dir.parent)
+    if parent_dir not in sys.path:
+        sys.path.insert(0, parent_dir)
     
     from PyQt6.QtWidgets import QApplication
     from PyQt6.QtCore import Qt
