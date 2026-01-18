@@ -6,7 +6,7 @@ from typing import Optional
 
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPlainTextEdit, QLabel,
-    QFrame, QPushButton, QToolButton, QSizePolicy,
+    QFrame, QPushButton, QToolButton, QSizePolicy, QTextEdit,
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QRegularExpression
 from PyQt6.QtGui import (
@@ -202,7 +202,7 @@ class YAMLEditor(QPlainTextEdit):
         extra_selections = []
         
         if not self.isReadOnly():
-            selection = QPlainTextEdit.ExtraSelection()
+            selection = QTextEdit.ExtraSelection()
             line_color = QColor(self.style_manager.colors["selected"])
             selection.format.setBackground(line_color)
             selection.format.setProperty(QTextFormat.Property.FullWidthSelection, True)
