@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#89b4fa"/>
+      <stop offset="100%" style="stop-color:#74c7ec"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="url(#bg)"/>
+  
+  <!-- Folder icon base -->
+  <path d="M28 40 L52 40 L56 48 L100 48 L100 92 L28 92 Z" 
+        fill="#1e1e2e" 
+        stroke="#cdd6f4" 
+        stroke-width="2"/>
+  
+  <!-- Arrow -->
+  <path d="M50 65 L78 65 M68 55 L78 65 L68 75" 
+        fill="none" 
+        stroke="#a6e3a1" 
+        stroke-width="4" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Gear accent -->
+  <circle cx="92" cy="36" r="12" fill="#f5c2e7"/>
+  <circle cx="92" cy="36" r="5" fill="#1e1e2e"/>
+</svg>
