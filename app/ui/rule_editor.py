@@ -606,6 +606,13 @@ class RuleEditor(QWidget):
         # Add stretch at the end
         self.cards_layout.addStretch()
     
+    def refresh_style(self, style_manager: StyleManager) -> None:
+        """Refresh styles after theme change."""
+        self.style_manager = style_manager
+        self.empty_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; padding: 40px;")
+        # Refresh all cards
+        self._refresh_cards()
+    
     def _on_edit_rule(self, index: int) -> None:
         """Handle rule edit request."""
         if 0 <= index < len(self.rules):

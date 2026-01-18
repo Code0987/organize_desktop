@@ -326,6 +326,20 @@ class ConfigEditor(QWidget):
         """Redo the last undone edit."""
         self.editor.redo()
     
+    def refresh_style(self, style_manager: StyleManager) -> None:
+        """Refresh styles after theme change."""
+        self.style_manager = style_manager
+        
+        # Update editor style
+        self.editor.style_manager = style_manager
+        self.editor._apply_style()
+        self.editor.highlighter.style_manager = style_manager
+        self.editor.highlighter._setup_rules()
+        self.editor.highlighter.rehighlight()
+        
+        # Update validation labels
+        self._validate()
+    
     def _on_text_changed(self) -> None:
         """Handle text change."""
         # Debounce validation

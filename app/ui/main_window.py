@@ -874,9 +874,35 @@ class MainWindow(QMainWindow):
         self.style_manager.set_theme(Theme.DARK if theme == "dark" else Theme.LIGHT)
         self.setStyleSheet(self.style_manager.get_stylesheet())
         
+        # Refresh styles on child widgets
+        self._refresh_child_styles()
+        
         # Update theme menu checkmarks
         for action in self._theme_actions:
             action.setChecked(action.text().lower().replace("&", "") == theme)
+    
+    def _refresh_child_styles(self) -> None:
+        """Refresh styles on all child widgets after theme change."""
+        # Refresh rule editor
+        if hasattr(self, 'rule_editor'):
+            self.rule_editor.refresh_style(self.style_manager)
+        
+        # Refresh config editor
+        if hasattr(self, 'config_editor'):
+            self.config_editor.refresh_style(self.style_manager)
+        
+        # Refresh log viewer
+        if hasattr(self, 'log_viewer'):
+            self.log_viewer.refresh_style(self.style_manager)
+        
+        # Refresh sidebar
+        if hasattr(self, 'sidebar'):
+            self.sidebar.setStyleSheet(f"""
+                QFrame {{
+                    background-color: {self.style_manager.colors["surface"]};
+                    border-right: 1px solid {self.style_manager.colors["border"]};
+                }}
+            """)
     
     def _on_settings(self) -> None:
         """Open settings dialog."""

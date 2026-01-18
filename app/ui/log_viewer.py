@@ -165,6 +165,24 @@ class LogViewer(QWidget):
         
         layout.addWidget(status_bar)
     
+    def refresh_style(self, style_manager: StyleManager) -> None:
+        """Refresh styles after theme change."""
+        self.style_manager = style_manager
+        
+        # Update log text area
+        self.log_text.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {style_manager.colors["background"]};
+                color: {style_manager.colors["text"]};
+                border: none;
+                padding: 8px;
+            }}
+        """)
+        
+        # Update status labels
+        self.count_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; font-size: 11px;")
+        self.stats_label.setStyleSheet(f"color: {style_manager.colors['text_secondary']}; font-size: 11px;")
+    
     def add_entry(self, entry: LogEntry) -> None:
         """
         Add a log entry.
