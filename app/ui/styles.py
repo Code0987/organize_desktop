@@ -403,41 +403,21 @@ QSpinBox:focus, QDoubleSpinBox:focus {{
 /* Check Box */
 QCheckBox {{
     spacing: 8px;
+    color: {c["text"]};
 }}
 
-QCheckBox::indicator {{
-    width: 18px;
-    height: 18px;
-    border: 2px solid {c["border"]};
-    border-radius: 4px;
-    background-color: {c["surface"]};
-}}
-
-QCheckBox::indicator:checked {{
-    background-color: {c["primary"]};
-    border-color: {c["primary"]};
-}}
-
-QCheckBox::indicator:hover {{
-    border-color: {c["primary"]};
+QCheckBox:disabled {{
+    color: {c["text_disabled"]};
 }}
 
 /* Radio Button */
 QRadioButton {{
     spacing: 8px;
+    color: {c["text"]};
 }}
 
-QRadioButton::indicator {{
-    width: 18px;
-    height: 18px;
-    border: 2px solid {c["border"]};
-    border-radius: 9px;
-    background-color: {c["surface"]};
-}}
-
-QRadioButton::indicator:checked {{
-    background-color: {c["primary"]};
-    border-color: {c["primary"]};
+QRadioButton:disabled {{
+    color: {c["text_disabled"]};
 }}
 
 /* Group Box */
