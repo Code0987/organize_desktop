@@ -38,6 +38,8 @@ class RunSettings:
 @dataclass
 class EditorSettings:
     """Code editor settings."""
+    editor_font_family: str = "Consolas"
+    editor_font_size: int = 11
     tab_size: int = 2
     use_spaces: bool = True
     auto_save: bool = True
